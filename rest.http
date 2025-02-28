@@ -1,0 +1,23 @@
+### GET Method
+GET http://localhost:8000/api/v1/tasks
+
+### POST Method
+POST http://localhost:8000/api/v1/tasks
+Content-Type: application/json
+
+{
+    "fName": "Bishes",
+    "lName": "Adhikari"
+}
+
+### Put Method
+PATCH  http://localhost:8000/api/v1/tasks
+Content-Type: application/json
+
+{
+    "fName": "Bishes",
+    "lName": "Adh"
+}
+
+### Delete Method
+DELETE http://localhost:8000/api/v1/tasks
