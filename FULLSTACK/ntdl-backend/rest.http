@@ -1,0 +1,24 @@
+### GET Method
+GET http://localhost:8000/api/v1/tasks
+
+### POST Method
+POST http://localhost:8000/api/v1/tasks
+Content-Type: application/json
+
+{
+    "task": "talking",
+    "hr": 60
+}
+
+### Put Method
+PATCH  http://localhost:8000/api/v1/tasks
+Content-Type: application/json
+
+{
+    "_id": "67c15aa51d1e9ca050f0455f",
+    "task": "Laughing",
+    "hr":10
+}
+
+### Delete Method
+DELETE http://localhost:8000/api/v1/tasks/67c15aa51d1e9ca050f0455f

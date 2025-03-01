@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import Form from "./components/Form";
 import Table from "./components/Table";
-import { postTask } from "../axiosHelper/axiosHelper";
+import { getTask, patchTask, postTask } from "../axiosHelper/axiosHelper";
 
 const hrsPerWeek = 24 * 7;
 
 function App() {
   const [taskList, setTaskList] = useState([]);
+
+  const [resp, setResp] = useState({});
+
+  // Implementing useREf
+  const fetchRef = useRef(true);
   const ttlHr = taskList.reduce((acc, item) => acc + item.hours, 0);
+
+  useEffect(() => {
+    fetchRef.current && fetchTask();
+    fetchRef.current = false;
+  }, []);
 
   const addTaskList = async (taskObj) => {
     // if (ttlHr + taskObj.hours > hrsPerWeek) {
@@ -17,31 +27,21 @@ function App() {
     // setTaskList([...taskList, obj]);
 
     const response = await postTask(taskObj);
-  };
-  const switchTask = (id, type) => {
-    const tempArr = taskList.map((item) => {
-      if (item.id === id) {
-        item.type = type;
-      }
 
-      return item;
-    });
-
-    setTaskList(tempArr);
+    setResp(response);
   };
 
-  const randomIdGnerator = (length = 6) => {
-    const str =
-      "qwertyuioplkjhgfdsazxxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM1234567890";
+  const fetchTask = async () => {
+    const data = await getTask();
+    console.log(data);
 
-    let id = "";
+    data?.status === "success" && setTaskList(data.savedData);
+  };
 
-    for (let i = 0; i < 6; i++) {
-      const randomIndex = Math.floor(Math.random() * str.length);
+  const switchTask = async (_id, type) => {
+    const data = await patchTask({ _id, type });
 
-      id += str[randomIndex];
-    }
-    return id;
+    data?.status === "success" && fetchTask();
   };
 
   const handleOnDelete = (id) => {
@@ -54,7 +54,17 @@ function App() {
     <div className="wrapper pt-5">
       <div className="container">
         <h1 className="text-center yuji-mai-regular">Time Divider App</h1>
-
+        {resp?.status === "success" && (
+          <div
+            className={
+              resp?.status === "success"
+                ? "alert alert-success"
+                : "alert alert-danger"
+            }
+          >
+            {resp?.message}
+          </div>
+        )}
         {/* <!-- form --> */}
         <Form addTaskList={addTaskList} />
 
