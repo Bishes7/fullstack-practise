@@ -8,14 +8,30 @@ const Table = ({ taskList, switchTask, handleOnDelete }) => {
   const handleOnSelect = (e) => {
     const { checked, value } = e.target;
 
+    let arrList = [];
+
+    if (value === "allEntry") {
+      arrList = entryList;
+    } else if (value === "allBad") {
+      arrList = badList;
+    }
+
     if (checked) {
-      if (value === "allEntry") {
-        const allItems = entryList.map((item) => item._id);
-        setToDelete([...toDelete, ...allItems]);
+      if (value === "allEntry" || value === "allBad") {
+        const allItems = arrList.map((item) => item._id);
+
+        const uniqueIds = [...new Set([...toDelete, ...allItems])];
+        setToDelete(uniqueIds);
         return;
       }
       setToDelete([...toDelete, value]);
     } else {
+      if (value === "allEntry" || value === "allBad") {
+        const allItems = arrList.map((item) => item._id);
+        const entryIds = toDelete.filter((_id) => !allItems.includes(_id));
+        setToDelete(entryIds);
+        return;
+      }
       const deletedIds = toDelete.filter((_id) => _id !== value);
       setToDelete(deletedIds);
     }
@@ -49,6 +65,7 @@ const Table = ({ taskList, switchTask, handleOnDelete }) => {
                         className="form-check-input me-3 "
                         type="checkbox"
                         value={item?._id}
+                        checked={toDelete.includes(item?._id)}
                       />
                       {item.task}
                     </div>
@@ -99,6 +116,7 @@ const Table = ({ taskList, switchTask, handleOnDelete }) => {
                         type="checkbox"
                         value={item?._id}
                         id=""
+                        checked={toDelete.includes(item?._id)}
                       />
                       {item.task}
                     </div>
@@ -123,12 +141,21 @@ const Table = ({ taskList, switchTask, handleOnDelete }) => {
             })}
           </tbody>
         </table>
+
         <div className="alert alert-success">
           You could have saved {badList.reduce((acc, i) => acc + i.hours, 0)}
           <span id="savedhours"></span>
           hours
         </div>
       </div>
+
+      {toDelete.length > 0 && (
+        <div className="d-grid my-3">
+          <button className="btn btn-danger">
+            Delete {toDelete.length} tasks
+          </button>
+        </div>
+      )}
     </div>
   );
 };
