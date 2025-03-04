@@ -52,16 +52,19 @@ router.patch("/", async (req, res) => {
 });
 // Delete Method
 
-router.delete("/:_id", async (req, res) => {
-  const { _id } = req.params;
+router.delete("/", async (req, res) => {
   try {
-    const deletedData = await deleteTask(_id);
+    const deletedData = await deleteTask(req.body);
 
-    res.json({
-      status: "success",
-      message: "delete method implemented",
-      deletedData,
-    });
+    deletedData?.deletedCount
+      ? res.json({
+          status: "success",
+          message: "delete method implemented",
+        })
+      : res.json({
+          status: "error",
+          message: "Unable to delete the task",
+        });
   } catch (error) {
     res.json({
       status: "error",

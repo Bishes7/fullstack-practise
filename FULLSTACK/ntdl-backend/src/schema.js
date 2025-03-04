@@ -45,6 +45,6 @@ export const patchTask = (_id, rest) => {
 };
 
 // DELETE
-export const deleteTask = (_id) => {
-  return collectionName.findByIdAndDelete(_id);
+export const deleteTask = (ids) => {
+  return collectionName.deleteMany({ _id: { $in: ids } });
 };
