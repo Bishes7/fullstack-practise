@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "copy -r dist ../ntdl-backend",
     "lint": "eslint .",
     "preview": "vite preview"
   },
