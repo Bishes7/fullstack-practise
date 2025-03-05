@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-const mongoURL = "mongodb://127.0.0.1:27017/dev_genius";
+// const mongoURL = "mongodb://127.0.0.1:27017/dev_genius";
+
+const mongoURL = process.env.MONGO_URL;
 
 const dbConnect = () => {
   try {
