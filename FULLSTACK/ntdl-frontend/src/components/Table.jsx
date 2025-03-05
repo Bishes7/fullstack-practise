@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 
-const Table = ({ taskList, switchTask, handleOnDelete }) => {
-  const [toDelete, setToDelete] = useState([]);
-  const entryList = taskList.filter((item) => item.type === "entry");
-  const badList = taskList.filter((item) => item.type === "bad");
-
+const Table = ({
+  taskList,
+  switchTask,
+  handleOnDelete,
+  toDelete,
+  entryList,
+  badList,
+  setToDelete,
+}) => {
   const handleOnSelect = (e) => {
     const { checked, value } = e.target;
 
@@ -74,12 +78,6 @@ const Table = ({ taskList, switchTask, handleOnDelete }) => {
                   <td>{item.hours}</td>
                   <td className="text-end">
                     <button
-                      onClick={() => handleOnDelete(item._id)}
-                      className="btn btn-danger"
-                    >
-                      <i className="fa-solid fa-trash"></i>
-                    </button>
-                    <button
                       onClick={() => switchTask(item._id, "bad")}
                       className="btn btn-success"
                     >
@@ -124,12 +122,6 @@ const Table = ({ taskList, switchTask, handleOnDelete }) => {
                   <td>{item.hours}</td>
                   <td className="text-end">
                     <button
-                      onClick={() => handleOnDelete(item._id)}
-                      className="btn btn-danger"
-                    >
-                      <i className="fa-solid fa-trash"></i>
-                    </button>
-                    <button
                       onClick={() => switchTask(item._id, "entry")}
                       className="btn btn-warning"
                     >
@@ -151,7 +143,10 @@ const Table = ({ taskList, switchTask, handleOnDelete }) => {
 
       {toDelete.length > 0 && (
         <div className="d-grid my-3">
-          <button className="btn btn-danger">
+          <button
+            className="btn btn-danger"
+            onClick={() => handleOnDelete(toDelete)}
+          >
             Delete {toDelete.length} tasks
           </button>
         </div>

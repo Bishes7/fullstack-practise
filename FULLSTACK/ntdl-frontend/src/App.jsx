@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import Form from "./components/Form";
 import Table from "./components/Table";
-import { getTask, patchTask, postTask } from "../axiosHelper/axiosHelper";
+import {
+  deleteTask,
+  getTask,
+  patchTask,
+  postTask,
+} from "../axiosHelper/axiosHelper";
 
 const hrsPerWeek = 24 * 7;
 
@@ -10,6 +15,10 @@ function App() {
   const [taskList, setTaskList] = useState([]);
 
   const [resp, setResp] = useState({});
+
+  const [toDelete, setToDelete] = useState([]);
+  const entryList = taskList.filter((item) => item.type === "entry");
+  const badList = taskList.filter((item) => item.type === "bad");
 
   // Implementing useREf
   const fetchRef = useRef(true);
@@ -27,6 +36,7 @@ function App() {
     // setTaskList([...taskList, obj]);
 
     const response = await postTask(taskObj);
+    response?.status === "success" && fetchTask();
 
     setResp(response);
   };
@@ -44,9 +54,11 @@ function App() {
     data?.status === "success" && fetchTask();
   };
 
-  const handleOnDelete = (id) => {
+  const handleOnDelete = async (idsToDelete) => {
     if (window.confirm("Do you want to delete this ?")) {
-      setTaskList(taskList.filter((item) => item.id !== id));
+      const response = await deleteTask(idsToDelete);
+      setResp(response);
+      response?.status === "success" && fetchTask();
     }
   };
 
@@ -73,6 +85,10 @@ function App() {
           taskList={taskList}
           switchTask={switchTask}
           handleOnDelete={handleOnDelete}
+          toDelete={toDelete}
+          entryList={entryList}
+          badList={badList}
+          setToDelete={setToDelete}
         />
         <div className="alert alert-success text-center">
           The total hours allocated is <span id="ttl">{ttlHr}</span> hours

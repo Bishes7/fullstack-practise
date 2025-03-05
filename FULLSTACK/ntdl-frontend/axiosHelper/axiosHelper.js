@@ -2,10 +2,13 @@ import axios from "axios";
 
 const apiEP = "http://localhost:8000/api/v1/tasks";
 
-// POST Task
-export const postTask = async (data) => {
+const apiProcessor = async ({ method, data }) => {
   try {
-    const response = await axios.post(apiEP, data);
+    const response = await axios({
+      method,
+      url: apiEP,
+      data,
+    });
     return response.data;
   } catch (error) {
     return {
@@ -13,30 +16,38 @@ export const postTask = async (data) => {
       message: error.message,
     };
   }
+};
+
+// POST Task
+export const postTask = async (data) => {
+  const obj = {
+    method: "post",
+    data,
+  };
+  return apiProcessor(obj);
 };
 
 //  GET Task
 export const getTask = async () => {
-  try {
-    const response = await axios.get(apiEP);
-    return response.data;
-  } catch (error) {
-    return {
-      status: "error",
-      message: error.message,
-    };
-  }
+  const obj = {
+    method: "get",
+  };
+  return apiProcessor(obj);
 };
 
 //  PATCH Task
 export const patchTask = async (data) => {
-  try {
-    const response = await axios.patch(apiEP, data);
-    return response.data;
-  } catch (error) {
-    return {
-      status: "error",
-      message: error.message,
-    };
-  }
+  const obj = {
+    method: "patch",
+    data,
+  };
+  return apiProcessor(obj);
+};
+
+export const deleteTask = async (data) => {
+  const obj = {
+    method: "delete",
+    data,
+  };
+  return apiProcessor(obj);
 };
